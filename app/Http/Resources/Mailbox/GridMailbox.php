@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\Mailbox;
 
+use App\Eco\Mailbox\IncomingServerType;
+use App\Eco\Mailbox\OutgoingServerType;
 use Illuminate\Http\Resources\Json\Resource;
 
 class GridMailbox extends Resource
@@ -24,9 +26,12 @@ class GridMailbox extends Resource
                 'imapHost' => $this->imap_host,
                 'username' => $this->username,
                 'valid' => $this->valid,
+                'incomingServerTypeName' => IncomingServerType::get($this->incoming_server_type)->getName(),
+                'outgoingServerTypeName' => OutgoingServerType::get($this->outgoing_server_type)->getName(),
+                'incomingServerType' => $this->incoming_server_type,
+                'outgoingServerType' => $this->outgoing_server_type,
                 'mailgunDomainId' => $this->mailgun_domain_id,
                 'mailgunDomain' => $this->mailgunDomain ? $this->mailgunDomain->domain : '',
-                'outgoingServerType' => $this->outgoing_server_type,
                 'primary' => $this->primary,
                 'isActive' => $this->is_active,
             ];

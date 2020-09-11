@@ -5,7 +5,7 @@ return [
     //Version number displayed in the header, change this with every update
     'version_major' => '3',
     'version_minor' => '3',
-    'version_fix' => '1.8',
+    'version_fix' => '2',
 
     //Alfresco envs
     'ALFRESCO_ADMIN_USERNAME' => env('ALFRESCO_ADMIN_USERNAME'),
@@ -230,6 +230,8 @@ return [
         //custom packages for document templates
         Barryvdh\DomPDF\ServiceProvider::class,
 
+        // Laravel package for reading and sending gmail/gsuite
+        Dacastro4\LaravelGmail\LaravelGmailServiceProvider::class,
     ],
 
     /*
@@ -262,6 +264,7 @@ return [
         'Gate' => Illuminate\Support\Facades\Gate::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,
         'Lang' => Illuminate\Support\Facades\Lang::class,
+        'LaravelGmail' => Dacastro4\LaravelGmail\Facade\LaravelGmail::class,
         'Log' => Illuminate\Support\Facades\Log::class,
         'Mail' => Illuminate\Support\Facades\Mail::class,
         'Notification' => Illuminate\Support\Facades\Notification::class,

@@ -33,8 +33,15 @@ class MailboxNewForm extends Component {
                 imapEncryption: '',
                 imapInboxPrefix: '',
                 usesMailgun: false,
+                usesGmailIncoming: false,
+                usesGmailOutgoing: false,
+                incomingServerType: 'imap',
                 outgoingServerType: 'smtp',
                 mailgunDomainId: '',
+                gmailProjectId: '',
+                gmailClientId: '',
+                gmailClientSecret: '',
+                gmailRedirectUrl: '',
                 primary: false,
                 isActive: true,
                 linkContactFromEmailToAddress: false,
@@ -49,6 +56,10 @@ class MailboxNewForm extends Component {
                 imapHost: false,
                 imapPort: false,
                 mailgunDomainId: false,
+                gmailProjectId: false,
+                gmailClientId: false,
+                gmailClientSecret: false,
+                gmailRedirectUrl: false,
             },
             loading: false,
         };
@@ -64,6 +75,37 @@ class MailboxNewForm extends Component {
             mailbox: {
                 ...this.state.mailbox,
                 [name]: value,
+            },
+        });
+    };
+
+    handleInputUsesGmailIncoming = event => {
+        const target = event.target;
+        const checked = target.checked;
+
+        this.setState({
+            ...this.state,
+            mailbox: {
+                ...this.state.mailbox,
+                usesGmailIncoming: checked,
+                incomingServerType: checked ? 'gmail' : 'imap',
+            },
+        });
+    };
+
+    handleInputUsesGmailOutgoing = event => {
+        const target = event.target;
+        const checked = target.checked;
+        // const checkedUsesMailgun = this.state.mailbox.usesMailgun;
+
+        this.setState({
+            ...this.state,
+            mailbox: {
+                ...this.state.mailbox,
+                usesGmailOutgoing: checked,
+                // usesMailgun: checked ? false : checkedUsesMailgun,
+                usesMailgun: false,
+                outgoingServerType: checked ? 'gmail' : 'smtp',
             },
         });
     };
@@ -101,14 +143,30 @@ class MailboxNewForm extends Component {
             hasErrors = true;
         }
 
-        if (validator.isEmpty(mailbox.username)) {
-            errors.username = true;
-            hasErrors = true;
-        }
 
-        if (validator.isEmpty(mailbox.password)) {
-            errors.password = true;
-            hasErrors = true;
+        if (mailbox.usesGmailIncoming) {
+            if (validator.isEmpty(mailbox.gmailClientId)) {
+                errors.gmailClientId = true;
+                hasErrors = true;
+            }
+            if (validator.isEmpty(mailbox.gmailClientSecret)) {
+                errors.gmailClientSecret = true;
+                hasErrors = true;
+            }
+            if (validator.isEmpty(mailbox.gmailRedirectUrl)) {
+                errors.gmailRedirectUrl = true;
+                hasErrors = true;
+            }
+
+        } else {
+            if (validator.isEmpty(mailbox.username)) {
+                errors.username = true;
+                hasErrors = true;
+            }
+            if (validator.isEmpty(mailbox.password)) {
+                errors.password = true;
+                hasErrors = true;
+            }
         }
 
         if (mailbox.usesMailgun) {
@@ -173,6 +231,12 @@ class MailboxNewForm extends Component {
             password,
             usesMailgun,
             mailgunDomainId,
+            usesGmailIncoming,
+            usesGmailOutgoing,
+            gmailProjectId,
+            gmailClientId,
+            gmailClientSecret,
+            gmailRedirectUrl,
             primary,
             isActive,
             linkContactFromEmailToAddress,
@@ -184,7 +248,7 @@ class MailboxNewForm extends Component {
                     <PanelBody>
                         <div className="row">
                             <InputText
-                                label="WeergaveNaam"
+                                label="Weergavenaam"
                                 name={'name'}
                                 value={name}
                                 onChangeAction={this.handleInputChange}
@@ -198,24 +262,6 @@ class MailboxNewForm extends Component {
                                 onChangeAction={this.handleInputChange}
                                 required={'required'}
                                 error={this.state.errors.email}
-                            />
-                        </div>
-                        <div className="row">
-                            <InputText
-                                label="Gebruikersnaam"
-                                name={'username'}
-                                value={username}
-                                onChangeAction={this.handleInputChange}
-                                required={'required'}
-                                error={this.state.errors.username}
-                            />
-                            <InputText
-                                label={'Wachtwoord'}
-                                name={'password'}
-                                value={password}
-                                onChangeAction={this.handleInputChange}
-                                required={'required'}
-                                error={this.state.errors.password}
                             />
                         </div>
                         <div className="row">
@@ -257,99 +303,276 @@ class MailboxNewForm extends Component {
                     </PanelHeader>
                     <PanelBody>
                         <div className="row">
-                            <InputText
-                                label="Inkomend"
-                                name={'imapHost'}
-                                value={imapHost}
-                                onChangeAction={this.handleInputChange}
-                                required={'required'}
-                                error={this.state.errors.imapHost}
+                            <InputToggle
+                                label="Inkomend gebruikt Gmail"
+                                name={'usesGmailIncoming'}
+                                value={usesGmailIncoming}
+                                onChangeAction={this.handleInputUsesGmailIncoming}
                             />
                             <InputToggle
-                                label="Gebruikt mailgun"
-                                name={'usesMailgun'}
-                                value={usesMailgun}
-                                onChangeAction={this.handleInputUsesMailgun}
+                                label="Uitgaand gebruikt Gmail"
+                                name={'usesGmailOutgoing'}
+                                value={usesGmailOutgoing}
+                                disabled={!usesGmailIncoming}
+                                onChangeAction={this.handleInputUsesGmailOutgoing}
                             />
                         </div>
-                        <div className="row">
-                            <div className="form-group col-md-6" />
-                            {usesMailgun ? (
-                                <InputSelect
-                                    label="Uitgaand"
-                                    name={'mailgunDomainId'}
-                                    value={mailgunDomainId}
-                                    options={this.props.mailgunDomain}
-                                    optionName={'domain'}
-                                    onChangeAction={this.handleInputChange}
-                                    error={this.state.errors.mailgunDomainId}
-                                />
-                            ) : (
-                                <InputText
-                                    label="Uitgaand"
-                                    name={'smtpHost'}
-                                    value={smtpHost}
-                                    onChangeAction={this.handleInputChange}
-                                    required={'required'}
-                                    error={this.state.errors.smtpHost}
-                                />
-                            )}
-                        </div>
+                        {usesGmailIncoming ? (
+                            <React.Fragment>
+                                {!usesGmailOutgoing && (
+                                <div className="row">
+                                    <InputText
+                                        label="Gebruikersnaam"
+                                        name={'username'}
+                                        value={username}
+                                        onChangeAction={this.handleInputChange}
+                                        required={'required'}
+                                        error={this.state.errors.username}
+                                    />
+                                    <InputText
+                                        label={'Wachtwoord'}
+                                        name={'password'}
+                                        value={password}
+                                        onChangeAction={this.handleInputChange}
+                                        required={'required'}
+                                        error={this.state.errors.password}
+                                    />
+                                </div>
+                                )}
+                                <div className="row">
+                                    <InputText
+                                        label="ProjectId"
+                                        name={'gmailProjectId'}
+                                        value={gmailProjectId}
+                                        onChangeAction={this.handleInputChange}
+                                        // required={'required'}
+                                        error={this.state.errors.gmailProjectId}
+                                    />
+                                    {!usesGmailOutgoing ? (
+                                        <InputToggle
+                                            label="Gebruikt mailgun"
+                                            name={'usesMailgun'}
+                                            value={usesMailgun}
+                                            onChangeAction={this.handleInputUsesMailgun}
+                                        />
+                                    ) : (
+                                        <div className="form-group col-md-6" />
+                                    )}
+                                </div>
+                                <div className="row">
+                                    <InputText
+                                        label="Client Id"
+                                        name={'gmailClientId'}
+                                        value={gmailClientId}
+                                        onChangeAction={this.handleInputChange}
+                                        required={'required'}
+                                        error={this.state.errors.gmailClientId}
+                                    />
+                                    {!usesGmailOutgoing ? (
+                                        usesMailgun ? (
+                                            <InputSelect
+                                                label="Uitgaand"
+                                                name={'mailgunDomainId'}
+                                                value={mailgunDomainId}
+                                                options={this.props.mailgunDomain}
+                                                optionName={'domain'}
+                                                onChangeAction={this.handleInputChange}
+                                                error={this.state.errors.mailgunDomainId}
+                                            />
+                                        ) : (
+                                            <InputText
+                                                label="Uitgaand"
+                                                name={'smtpHost'}
+                                                value={smtpHost}
+                                                onChangeAction={this.handleInputChange}
+                                                required={'required'}
+                                                error={this.state.errors.smtpHost}
+                                            />
+                                        )
+                                    ) : (
+                                        <div className="form-group col-md-6" />
+                                    )}
+                                </div>
+                                <div className="row">
+                                    <InputText
+                                        label="Client secret"
+                                        name={'gmailClientSecret'}
+                                        value={gmailClientSecret}
+                                        onChangeAction={this.handleInputChange}
+                                        required={'required'}
+                                        error={this.state.errors.gmailClientSecret}
+                                    />
+                                    <div className="form-group col-md-6" />
+                                </div>
+                                <div className="row">
+                                    <InputText
+                                        label="Redirect Url"
+                                        name={'gmailRedirectUrl'}
+                                        value={gmailRedirectUrl}
+                                        onChangeAction={this.handleInputChange}
+                                        required={'required'}
+                                        error={this.state.errors.gmailRedirectUrl}
+                                    />
+                                    <div className="form-group col-md-6" />
+                                </div>
+                            </React.Fragment>
+                        ) : (
+                            <React.Fragment>
+                                <div className="row">
+                                    <InputText
+                                        label="Gebruikersnaam"
+                                        name={'username'}
+                                        value={username}
+                                        onChangeAction={this.handleInputChange}
+                                        required={'required'}
+                                        error={this.state.errors.username}
+                                    />
+                                    <InputText
+                                        label={'Wachtwoord'}
+                                        name={'password'}
+                                        value={password}
+                                        onChangeAction={this.handleInputChange}
+                                        required={'required'}
+                                        error={this.state.errors.password}
+                                    />
+                                </div>
+                                <div className="row">
+                                    <InputText
+                                        label="Inkomend"
+                                        name={'imapHost'}
+                                        value={imapHost}
+                                        onChangeAction={this.handleInputChange}
+                                        required={'required'}
+                                        error={this.state.errors.imapHost}
+                                    />
+                                    <InputToggle
+                                        label="Gebruikt mailgun"
+                                        name={'usesMailgun'}
+                                        value={usesMailgun}
+                                        onChangeAction={this.handleInputUsesMailgun}
+                                        required={'required'}
+                                    />
+                                </div>
+                                <div className="row">
+                                    <div className="form-group col-md-6" />
+                                    {usesMailgun ? (
+                                        <InputSelect
+                                            label="Uitgaand"
+                                            name={'mailgunDomainId'}
+                                            value={mailgunDomainId}
+                                            options={this.props.mailgunDomain}
+                                            optionName={'domain'}
+                                            onChangeAction={this.handleInputChange}
+                                            error={this.state.errors.mailgunDomainId}
+                                        />
+                                    ) : (
+                                        <InputText
+                                            label="Uitgaand"
+                                            name={'smtpHost'}
+                                            value={smtpHost}
+                                            onChangeAction={this.handleInputChange}
+                                            required={'required'}
+                                            error={this.state.errors.smtpHost}
+                                        />
+                                    )}
+                                </div>
+                            </React.Fragment>
+                        )}
                     </PanelBody>
 
-                    <PanelHeader>
-                        <span className="h5">Extra instellingen</span>
-                    </PanelHeader>
-                    <PanelBody>
-                        <div className="row">
-                            <InputText
-                                label={'Imap poort'}
-                                name={'imapPort'}
-                                value={imapPort}
-                                onChangeAction={this.handleInputChange}
-                                required={'required'}
-                                error={this.state.errors.imapPort}
-                            />
-                            {!usesMailgun && (
-                                <InputText
-                                    label={'Smtp poort'}
-                                    name={'smtpPort'}
-                                    value={smtpPort}
-                                    onChangeAction={this.handleInputChange}
-                                    required={'required'}
-                                    error={this.state.errors.smtpPort}
-                                />
-                            )}
-                        </div>
+                    {usesGmailIncoming ? (
+                        !usesGmailOutgoing && (
+                        <React.Fragment>
+                            <PanelHeader>
+                                <span className="h5">Extra instellingen</span>
+                            </PanelHeader>
+                            <PanelBody>
+                                <div className="row">
+                                    <div className="form-group col-md-6" />
+                                    {!usesMailgun && (
+                                        <InputText
+                                            label={'Smtp poort'}
+                                            name={'smtpPort'}
+                                            value={smtpPort}
+                                            onChangeAction={this.handleInputChange}
+                                            required={'required'}
+                                            error={this.state.errors.smtpPort}
+                                        />
+                                    )}
+                                </div>
 
-                        <div className="row">
-                            <InputSelect
-                                label="Imap versleutelde verbinding"
-                                name={'imapEncryption'}
-                                value={imapEncryption}
-                                options={[{ id: 'ssl', name: 'SSL' }, { id: 'tls', name: 'TLS' }]}
-                                onChangeAction={this.handleInputChange}
-                            />
-                            {!usesMailgun && (
-                                <InputSelect
-                                    label="Smtp versleutelde verbinding"
-                                    name={'smtpEncryption'}
-                                    value={smtpEncryption}
-                                    options={[{ id: 'ssl', name: 'SSL' }, { id: 'tls', name: 'TLS' }]}
-                                    onChangeAction={this.handleInputChange}
-                                />
-                            )}
-                        </div>
-                        <div className="row">
-                            <InputText
-                                label={'Inbox prefix'}
-                                name={'imapInboxPrefix'}
-                                value={imapInboxPrefix}
-                                onChangeAction={this.handleInputChange}
-                                error={this.state.errors.imapInboxPrefix}
-                            />
-                        </div>
-                    </PanelBody>
+                                <div className="row">
+                                    <div className="form-group col-md-6" />
+                                    {!usesMailgun && (
+                                        <InputSelect
+                                            label="Smtp versleutelde verbinding"
+                                            name={'smtpEncryption'}
+                                            value={smtpEncryption}
+                                            options={[{ id: 'ssl', name: 'SSL' }, { id: 'tls', name: 'TLS' }]}
+                                            onChangeAction={this.handleInputChange}
+                                        />
+                                    )}
+                                </div>
+                            </PanelBody>
+                        </React.Fragment>
+                        )
+                    ) : (
+                        <React.Fragment>
+                            <PanelHeader>
+                                <span className="h5">Extra instellingen</span>
+                            </PanelHeader>
+                            <PanelBody>
+                                <div className="row">
+                                    <InputText
+                                        label={'Imap poort'}
+                                        name={'imapPort'}
+                                        value={imapPort}
+                                        onChangeAction={this.handleInputChange}
+                                        required={'required'}
+                                        error={this.state.errors.imapPort}
+                                    />
+                                    {!usesMailgun && (
+                                        <InputText
+                                            label={'Smtp poort'}
+                                            name={'smtpPort'}
+                                            value={smtpPort}
+                                            onChangeAction={this.handleInputChange}
+                                            required={'required'}
+                                            error={this.state.errors.smtpPort}
+                                        />
+                                    )}
+                                </div>
+
+                                <div className="row">
+                                    <InputSelect
+                                        label="Imap versleutelde verbinding"
+                                        name={'imapEncryption'}
+                                        value={imapEncryption}
+                                        options={[{ id: 'ssl', name: 'SSL' }, { id: 'tls', name: 'TLS' }]}
+                                        onChangeAction={this.handleInputChange}
+                                    />
+                                    {!usesMailgun && (
+                                        <InputSelect
+                                            label="Smtp versleutelde verbinding"
+                                            name={'smtpEncryption'}
+                                            value={smtpEncryption}
+                                            options={[{ id: 'ssl', name: 'SSL' }, { id: 'tls', name: 'TLS' }]}
+                                            onChangeAction={this.handleInputChange}
+                                        />
+                                    )}
+                                </div>
+                                <div className="row">
+                                    <InputText
+                                        label={'Inbox prefix'}
+                                        name={'imapInboxPrefix'}
+                                        value={imapInboxPrefix}
+                                        onChangeAction={this.handleInputChange}
+                                        error={this.state.errors.imapInboxPrefix}
+                                    />
+                                </div>
+                            </PanelBody>
+                        </React.Fragment>
+                    )}
 
                     <PanelBody>
                         <div className="pull-right btn-group" role="group">

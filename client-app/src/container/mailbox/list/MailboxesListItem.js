@@ -36,11 +36,14 @@ class MailboxesListItem extends Component {
             name,
             email,
             username,
+            incomingServerTypeName,
+            outgoingServerTypeName,
+            incomingServerType,
+            outgoingServerType,
             imapHost,
             smtpHost,
             mailgunDomain,
             valid,
-            outgoingServerType,
             primary,
             isActive,
         } = this.props;
@@ -55,9 +58,10 @@ class MailboxesListItem extends Component {
             >
                 <td>{name}</td>
                 <td>{email}</td>
+                <td>{incomingServerTypeName}</td>
+                <td>{outgoingServerTypeName}</td>
                 <td>{username}</td>
                 <td>{imapHost}</td>
-                <td>{usesMailgun ? 'Ja' : 'Nee'}</td>
                 <td>{usesMailgun ? mailgunDomain : smtpHost}</td>
                 <td>{primary ? 'Primair' : ''}</td>
                 <td>{isActive ? 'Ja' : 'Nee'}</td>

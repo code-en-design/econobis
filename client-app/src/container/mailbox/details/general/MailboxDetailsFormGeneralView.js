@@ -21,12 +21,18 @@ const MailboxDetailsFormGeneralView = props => {
         dateLastFetched,
         imapIdLastFetched,
         username,
+        incomingServerType,
         outgoingServerType,
         mailgunDomain,
+        gmailProjectId,
+        gmailClientId,
+        gmailRedirectUrl,
         isActive,
         primary,
         linkContactFromEmailToAddress,
     } = props.mailboxDetails;
+    const usesGmailIncoming = incomingServerType === 'gmail' ? true : false;
+    const usesGmailOutgoing = outgoingServerType === 'gmail' ? true : false;
     const usesMailgun = outgoingServerType === 'mailgun' ? true : false;
 
     return (
@@ -36,10 +42,6 @@ const MailboxDetailsFormGeneralView = props => {
                     <div className="row">
                         <ViewText label={'Weergavenaam'} value={name} />
                         <ViewText label={'E-mail'} value={email} />
-                    </div>
-                    <div className="row">
-                        <ViewText label={'Gebruikersnaam'} value={username} />
-                        <ViewText label={'Wachtwoord'} value="••••••••••" />
                     </div>
                     <div className="row">
                         <ViewText label="Actief" value={isActive ? 'Ja' : 'Nee'} />
@@ -66,38 +68,122 @@ const MailboxDetailsFormGeneralView = props => {
                 </PanelHeader>
                 <PanelBody>
                     <div className="row">
-                        <ViewText label="Inkomend" value={imapHost} />
                         <ViewText
-                            label={'Gebruikt mailgun'}
-                            value={props.mailboxDetails.outgoingServerType === 'mailgun' ? 'Ja' : 'Nee'}
+                            label="Inkomend gebruikt Gmail"
+                            value={usesGmailIncoming ? 'Ja' : 'Nee'}
+                        />
+                        <ViewText
+                            label="Uitgaand gebruikt Gmail"
+                            value={usesGmailOutgoing ? 'Ja' : 'Nee'}
                         />
                     </div>
-                    <div className="row">
-                        <div className="col-md-6" />
-                        {usesMailgun ? (
-                            <ViewText label="Uitgaand" value={mailgunDomain} />
-                        ) : (
-                            <ViewText label="Uitgaand" value={smtpHost} />
-                        )}
-                    </div>
+                    {usesGmailIncoming ? (
+                        <React.Fragment>
+                            {!usesGmailOutgoing && (
+                                <div className="row">
+                                    <ViewText label={'Gebruikersnaam'} value={username} />
+                                    <ViewText label={'Wachtwoord'} value="••••••••••" />
+                                </div>
+                            )}
+                            <div className="row">
+                                <ViewText label="Project Id" value={gmailProjectId} />
+                                {!usesGmailOutgoing ? (
+                                    <ViewText
+                                        label={'Gebruikt mailgun'}
+                                        value={usesMailgun ? 'Ja' : 'Nee'}
+                                    />
+                                ) : (
+                                    <div className="col-md-6" />
+                                )}
+                            </div>
+                            <div className="row">
+                                <ViewText label="Client Id" value={gmailClientId} />
+                                {!usesGmailOutgoing ? (
+                                    usesMailgun ? (
+                                        <ViewText label="Uitgaand" value={mailgunDomain} />
+                                    ) : (
+                                        <ViewText label="Uitgaand" value={smtpHost} />
+                                    )
+                                ) : (
+                                    <div className="col-md-6" />
+                                )}
+                            </div>
+                            <div className="row">
+                                <ViewText label="Client secret" value="**********" />
+                                <div className="form-group col-md-6" />
+                            </div>
+                            <div className="row">
+                                <ViewText label="Redirect Url" value={gmailRedirectUrl} />
+                                <div className="form-group col-md-6" />
+                            </div>
+
+                        </React.Fragment>
+                    ) : (
+                        <React.Fragment>
+                            <div className="row">
+                                <ViewText label={'Gebruikersnaam'} value={username} />
+                                <ViewText label={'Wachtwoord'} value="••••••••••" />
+                            </div>
+
+                            <div className="row">
+                                <ViewText label="Inkomend" value={imapHost} />
+                                <ViewText
+                                    label={'Gebruikt mailgun'}
+                                    value={usesMailgun? 'Ja' : 'Nee'}
+                                />
+                            </div>
+                            <div className="row">
+                                <div className="col-md-6" />
+                                {usesMailgun ? (
+                                    <ViewText label="Uitgaand" value={mailgunDomain} />
+                                ) : (
+                                    <ViewText label="Uitgaand" value={smtpHost} />
+                                )}
+                            </div>
+                        </React.Fragment>
+                    )}
+
                 </PanelBody>
 
-                <PanelHeader>
-                    <span className="h5">Extra instellingen</span>
-                </PanelHeader>
-                <PanelBody>
-                    <div className="row">
-                        <ViewText label={'Imap poort'} value={imapPort} />
-                        {!usesMailgun && <ViewText label="Smtp poort" value={smtpPort} />}
-                    </div>
-                    <div className="row">
-                        <ViewText label={'Imap versleutelde verbinding'} value={imapEncryption} />
-                        {!usesMailgun && <ViewText label="Smtp versleutelde verbinding" value={smtpEncryption} />}
-                    </div>
-                    <div className="row">
-                        <ViewText label={'Inbox prefix'} value={imapInboxPrefix} />
-                    </div>
-                </PanelBody>
+                {usesGmailIncoming ? (
+                    !usesGmailOutgoing && (
+                        <React.Fragment>
+                            <PanelHeader>
+                                <span className="h5">Extra instellingen</span>
+                            </PanelHeader>
+                            <PanelBody>
+                                <div className="row">
+                                    <div className="col-md-6" />
+                                    {!usesMailgun && <ViewText label="Smtp poort" value={smtpPort} />}
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6" />
+                                    {!usesMailgun && <ViewText label="Smtp versleutelde verbinding" value={smtpEncryption} />}
+                                </div>
+                            </PanelBody>
+                        </React.Fragment>
+                    )
+                    ) : (
+                    <React.Fragment>
+                        <PanelHeader>
+                            <span className="h5">Extra instellingen</span>
+                        </PanelHeader>
+                        <PanelBody>
+                            <div className="row">
+                                <ViewText label={'Imap poort'} value={imapPort} />
+                                {!usesMailgun && <ViewText label="Smtp poort" value={smtpPort} />}
+                            </div>
+                            <div className="row">
+                                <ViewText label={'Imap versleutelde verbinding'} value={imapEncryption} />
+                                {!usesMailgun && <ViewText label="Smtp versleutelde verbinding" value={smtpEncryption} />}
+                            </div>
+                            <div className="row">
+                                <ViewText label={'Inbox prefix'} value={imapInboxPrefix} />
+                            </div>
+                        </PanelBody>
+                    </React.Fragment>
+                    )}
+
                 <PanelHeader>
                     <span className="h5">Log</span>
                 </PanelHeader>

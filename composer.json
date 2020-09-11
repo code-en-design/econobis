@@ -9,6 +9,7 @@
         "barryvdh/laravel-cors": "^0.11.3",
         "barryvdh/laravel-dompdf": "^0.8.1",
         "cmpayments/iban": "^1.1",
+        "dacastro4/laravel-gmail": "^4.0",
         "doctrine/dbal": "^2.6",
         "ecodenl/pico-wrapper": "dev-master",
         "iio/libmergepdf": "^3.1",

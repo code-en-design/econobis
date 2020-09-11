@@ -13,6 +13,7 @@ use App\Eco\Mailbox\ImapEncryptionType;
 use App\Eco\Mailbox\Mailbox;
 use App\Eco\Mailbox\MailboxIgnore;
 use App\Eco\Mailbox\MailFetcher;
+use App\Eco\Mailbox\MailFetcherGmail;
 use App\Eco\Mailbox\MailValidator;
 use App\Eco\Mailbox\SmtpEncryptionType;
 use App\Eco\User\User;
@@ -59,6 +60,11 @@ class MailboxController extends Controller
             ->string('password')->whenMissing('')->onEmpty('')->alias('password')->next()
             ->integer('mailgunDomainId')->whenMissing(null)->onEmpty(null)->alias('mailgun_domain_id')->next()
             ->string('outgoingServerType')->whenMissing('smtp')->onEmpty('smtp')->alias('outgoing_server_type')->next()
+            ->string('incomingServerType')->whenMissing('imap')->onEmpty('imap')->alias('incoming_server_type')->next()
+            ->string('gmailProjectId')->whenMissing('')->onEmpty('')->alias('gmail_project_id')->next()
+            ->string('gmailClientId')->whenMissing('')->onEmpty('')->alias('gmail_client_id')->next()
+            ->string('gmailClientSecret')->whenMissing('')->onEmpty('')->alias('gmail_client_secret')->next()
+            ->string('gmailRedirectUrl')->whenMissing('')->onEmpty('')->alias('gmail_redirect_url')->next()
             ->boolean('isActive')->alias('is_active')->next()
             ->boolean('primary')->next()
             ->boolean('linkContactFromEmailToAddress')->alias('link_contact_from_email_to_address')->whenMissing(false)->onEmpty(false)->next()
@@ -75,7 +81,11 @@ class MailboxController extends Controller
         $mailbox->users()->attach(Auth::user());
 
         //Create a new mailfetcher. This will check if the mailbox is valid and set it in the db.
-        new MailFetcher($mailbox);
+        if($mailbox->incoming_server_type === 'gmail'){
+            new MailFetcherGmail($mailbox);
+        }else{
+            new MailFetcher($mailbox);
+        }
 
         return GenericResource::make($mailbox);
     }
@@ -105,6 +115,11 @@ class MailboxController extends Controller
             ->string('password')->whenMissing($mailbox->password)->onEmpty($mailbox->password)->alias('password')->next()
             ->integer('mailgunDomainId')->whenMissing(null)->onEmpty(null)->alias('mailgun_domain_id')->next()
             ->string('outgoingServerType')->alias('outgoing_server_type')->next()
+            ->string('incomingServerType')->alias('incoming_server_type')->next()
+            ->string('gmailProjectId')->alias('gmail_project_id')->next()
+            ->string('gmailClientId')->alias('gmail_client_id')->next()
+            ->string('gmailClientSecret')->whenMissing($mailbox->gmail_client_secret)->onEmpty($mailbox->gmail_client_secret)->alias('gmail_client_secret')->next()
+            ->string('gmailRedirectUrl')->alias('gmail_redirect_url')->next()
             ->boolean('isActive')->alias('is_active')->next()
             ->boolean('primary')->next()
             ->boolean('linkContactFromEmailToAddress')->alias('link_contact_from_email_to_address')->whenMissing(false)->onEmpty(false)->next()
@@ -120,7 +135,11 @@ class MailboxController extends Controller
         }
 
         //Create a new mailfetcher. This will check if the mailbox is valid and set it in the db.
-        new MailFetcher($mailbox);
+        if($mailbox->incoming_server_type === 'gmail'){
+            new MailFetcherGmail($mailbox);
+        }else{
+            new MailFetcher($mailbox);
+        }
 
         return $this->show($mailbox);
     }
@@ -152,7 +171,11 @@ class MailboxController extends Controller
             return 'This mailbox is invalid';
         }
 
-        $mailFetcher = new MailFetcher($mailbox);
+        if($mailbox->incoming_server_type === 'gmail'){
+            $mailFetcher = new MailFetcherGmail($mailbox);
+        }else{
+            $mailFetcher = new MailFetcher($mailbox);
+        }
         $mailFetcher->fetchNew();
     }
 
@@ -183,7 +206,11 @@ class MailboxController extends Controller
     {
         $mailboxes = Mailbox::where('valid', 1)->where('is_active', 1)->get();
         foreach ($mailboxes as $mailbox) {
-            $mailFetcher = new MailFetcher($mailbox);
+            if($mailbox->incoming_server_type === 'gmail'){
+                $mailFetcher = new MailFetcherGmail($mailbox);
+            }else{
+                $mailFetcher = new MailFetcher($mailbox);
+            }
             $mailFetcher->fetchNew();
         }
     }
