@@ -231,7 +231,7 @@ return [
         Barryvdh\DomPDF\ServiceProvider::class,
 
         // Laravel package for reading and sending gmail/gsuite
-        Dacastro4\LaravelGmail\LaravelGmailServiceProvider::class,
+        App\Gmail\LaravelGmailServiceProvider::class,
     ],
 
     /*
@@ -264,7 +264,7 @@ return [
         'Gate' => Illuminate\Support\Facades\Gate::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,
         'Lang' => Illuminate\Support\Facades\Lang::class,
-        'LaravelGmail' => Dacastro4\LaravelGmail\Facade\LaravelGmail::class,
+        'LaravelGmail' => App\Gmail\Facade\LaravelGmail::class,
         'Log' => Illuminate\Support\Facades\Log::class,
         'Mail' => Illuminate\Support\Facades\Mail::class,
         'Notification' => Illuminate\Support\Facades\Notification::class,

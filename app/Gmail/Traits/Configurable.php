@@ -1,6 +1,6 @@
 <?php
 
-namespace Dacastro4\LaravelGmail\Traits;
+namespace App\Gmail\Traits;
 
 use Google_Service_Gmail;
 use Illuminate\Support\Facades\Storage;

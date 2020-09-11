@@ -17,7 +17,7 @@ Route::get('/twinfield', 'Api\Twinfield\TwinfieldController@twinfield');
 use App\Eco\Mailbox\MailFetcherGmail;
 use App\Http\Controllers\Api\Mailbox\GmailController;
 use Carbon\Carbon;
-use Dacastro4\LaravelGmail\Facade\LaravelGmail;
+use App\Gmail\Facade\LaravelGmail;
 
 Route::get('/', 'HomeController@welcome');
 

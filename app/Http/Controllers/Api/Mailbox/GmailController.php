@@ -10,8 +10,6 @@ namespace App\Http\Controllers\Api\Mailbox;
 
 
 use App\Http\Controllers\Controller;
-use Dacastro4\LaravelGmail\Facade\LaravelGmail;
-//use Dacastro4\LaravelGmail\LaravelGmailClass;
 
 class GmailController extends Controller
 {

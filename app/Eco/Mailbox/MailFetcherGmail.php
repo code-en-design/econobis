@@ -14,7 +14,7 @@ use App\Eco\Email\EmailAttachment;
 use App\Eco\EmailAddress\EmailAddress;
 use App\Http\Controllers\Api\Mailbox\GmailController;
 use Carbon\Carbon;
-use Dacastro4\LaravelGmail\Facade\LaravelGmail;
+use App\Gmail\Facade\LaravelGmail;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Storage;
