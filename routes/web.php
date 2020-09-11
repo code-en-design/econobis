@@ -62,7 +62,7 @@ Route::get('/oauth/gmail/fetch-mails/{mailboxId}', function ($mailboxId){
     $mailbox = \App\Eco\Mailbox\Mailbox::find($mailboxId);
     $mailFetcherGmail = new MailFetcherGmail($mailbox);
     $mailFetcherGmail->fetchNew();
-    return redirect()->to('/emails/inbox');
+//    return redirect()->to('/#/emails/inbox');
 });
 
 //Route::get('/oauth/gmail/logout', function (){
