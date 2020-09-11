@@ -136,12 +136,32 @@ class MailboxDetailsFormGeneralEdit extends Component {
                 errors.gmailRedirectUrl = true;
                 hasErrors = true;
             }
+            if (!mailbox.usesGmailOutgoing) {
+                if (validator.isEmpty(mailbox.username)) {
+                    errors.username = true;
+                    hasErrors = true;
+                }
+                if (validator.isEmpty(mailbox.imapHost)) {
+                    errors.imapHost = true;
+                    hasErrors = true;
+                }
+            }
 
         } else {
             if (validator.isEmpty(mailbox.username)) {
                 errors.username = true;
                 hasErrors = true;
             }
+            if (validator.isEmpty(mailbox.imapHost)) {
+                errors.imapHost = true;
+                hasErrors = true;
+            }
+
+            if (validator.isEmpty(mailbox.imapPort)) {
+                errors.imapPort = true;
+                hasErrors = true;
+            }
+
         }
 
         if (mailbox.usesMailgun) {
@@ -149,7 +169,7 @@ class MailboxDetailsFormGeneralEdit extends Component {
                 errors.mailgunDomainId = true;
                 hasErrors = true;
             }
-        } else {
+        } else if (!mailbox.usesGmailOutgoing) {
             if (validator.isEmpty(mailbox.smtpHost)) {
                 errors.smtpHost = true;
                 hasErrors = true;
@@ -159,16 +179,6 @@ class MailboxDetailsFormGeneralEdit extends Component {
                 errors.smtpPort = true;
                 hasErrors = true;
             }
-        }
-
-        if (validator.isEmpty(mailbox.imapHost)) {
-            errors.imapHost = true;
-            hasErrors = true;
-        }
-
-        if (validator.isEmpty(mailbox.imapPort)) {
-            errors.imapPort = true;
-            hasErrors = true;
         }
 
         this.setState({ ...this.state, errors: errors });

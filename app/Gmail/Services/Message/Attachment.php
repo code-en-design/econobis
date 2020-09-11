@@ -57,7 +57,7 @@ class Attachment extends GmailConnection
 	 */
 	public function __construct($singleMessageId, \Google_Service_Gmail_MessagePart $part, $userId = false)
 	{
-//        echo "UserId in construct Attachment: " . $userId . "<br/>";
+        echo "UserId in construct Attachment: " . $userId . "<br/>";
 
         parent::__construct(config(), $userId);
 

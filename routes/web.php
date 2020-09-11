@@ -15,7 +15,7 @@ Route::get('/twinfield', 'Api\Twinfield\TwinfieldController@twinfield');
 
 // Welcome
 use App\Eco\Mailbox\MailFetcherGmail;
-use App\Http\Controllers\Api\Mailbox\GmailController;
+use App\Gmail\GmailHelper;
 use Carbon\Carbon;
 use App\Gmail\Facade\LaravelGmail;
 
@@ -37,7 +37,7 @@ Route::get('/oauth/gmail/mailbox/{mailboxId}', function ($mailboxId){
 
     $mailbox = \App\Eco\Mailbox\Mailbox::find($mailboxId);
     LaravelGmail::setUserId($mailboxId);
-    $gmailController = new GmailController($mailbox);
+    $gmailController = new GmailHelper($mailbox);
     return $gmailController->oauthGmail();
 
 });
@@ -83,7 +83,7 @@ Route::get('/oauth/gmail/checkuser/{mailboxId}', function ($mailboxId){
 //    echo LaravelGmail::check() ? 'Ingelogd: ' . LaravelGmail::user() : 'Niet ingelogd';
     $mailbox = \App\Eco\Mailbox\Mailbox::find($mailboxId);
     LaravelGmail::setUserId($mailboxId);
-    $gmailController = new GmailController($mailbox);
+    $gmailController = new GmailHelper($mailbox);
     echo $gmailController->checkOauthGmail() ? 'Ingelogd: ' . LaravelGmail::user() : 'Niet ingelogd';
 });
 

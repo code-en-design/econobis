@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Api\Mailbox;
+namespace App\Gmail;
 
-use App\Gmail\GmailConnection;
 
 class EconobisLaravelGmailClass extends GmailConnection
 {

@@ -6,12 +6,12 @@
  * Time: 14:09
  */
 
-namespace App\Http\Controllers\Api\Mailbox;
+namespace App\Gmail;
 
 
-use App\Http\Controllers\Controller;
+use App\Gmail\Facade\LaravelGmail;
 
-class GmailController extends Controller
+class GmailHelper
 {
     private $mailbox;
     private $config;
@@ -39,7 +39,18 @@ class GmailController extends Controller
 
     public function checkOauthGmail()
     {
+        echo "Check gmail email<br/>";
         $gmail = new EconobisLaravelGmailClass($this->config, $this->mailbox->id);
+        echo "emailaddress gmail: " . $gmail->getProfile()->emailAddress . "<br/>";
+        // Indien emailadres van mailbox niet overeenkomt met emailadres bij gekoppeld gmail account, dan niet ok.
+        if($this->mailbox->email != $gmail->getProfile()->emailAddress){
+            echo "Fout: emailadres (" . $gmail->getProfile()->emailAddress . ") Gmail account komt niet overeen met emailadres (" . $this->mailbox->email . ") bij mailbox (" . $this->mailbox->id . ")<br/>";
+            return false;
+        }else{
+            echo "Goed: emailadres (" . $gmail->getProfile()->emailAddress . ") Gmail account komt overeen met emailadres (" . $this->mailbox->email . ") bij mailbox (" . $this->mailbox->id . ")<br/>";
+        }
+
+        echo ($gmail->check() ? 'Ingelogd: ' . LaravelGmail::user() : 'Niet ingelogd') . "<br/>";
         return $gmail->check();
     }
 

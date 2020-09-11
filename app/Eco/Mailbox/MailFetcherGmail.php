@@ -12,9 +12,10 @@ namespace App\Eco\Mailbox;
 use App\Eco\Email\Email;
 use App\Eco\Email\EmailAttachment;
 use App\Eco\EmailAddress\EmailAddress;
-use App\Http\Controllers\Api\Mailbox\GmailController;
+use App\Gmail\GmailHelper;
 use Carbon\Carbon;
 use App\Gmail\Facade\LaravelGmail;
+use Google_Service_Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Storage;
@@ -27,6 +28,8 @@ class MailFetcherGmail
      */
     private $mailbox;
     private $fetchedEmails = [];
+
+    const MESSAGE_0_ITEMS_FOUND = "Failed to parse batch request, error: 0 items.";
 
     public function __construct(Mailbox $mailbox)
     {
@@ -44,9 +47,24 @@ class MailFetcherGmail
         }
         try {
             $emails = LaravelGmail::message()->unread()->preload()->all();
-
-        } catch(\Exception $ex) {
-            Log::error("FetchNew melding mailbox " . $this->mailbox->id);
+        }
+        catch(Google_Service_Exception $gse) {
+            if($gse->getCode() == '400' && !empty($gse->getErrors()[0]['message']) &&
+                ( $gse->getErrors()[0]['message'].contains($this::MESSAGE_0_ITEMS_FOUND ) )
+            ){
+                echo "Geen ongelezen mail gevonden<br/>";
+                return;
+            }
+            Log::error("Google Service Foutmelding FetchNew voor mailbox " . $this->mailbox->id);
+            Log::error("Melding: " . $gse->getMessage());
+//            echo substr($gse->getErrors()[0]['message'], 0,47) . "<br/>";
+//            echo $this::MESSAGE_0_ITEMS_FOUND . "<br/>";
+            echo "Google Service Foutmelding FetchNew voor mailbox " . $this->mailbox->id . "<br/>";
+            echo "Melding: " . $gse->getMessage() . "<br/>";
+            return;
+        }
+        catch(\Exception $ex) {
+            Log::error("Foutmelding FetchNew voor mailbox " . $this->mailbox->id);
             Log::error("Melding: " . $ex);
             echo"FetchNew melding mailbox " . $this->mailbox->id;
             echo "Melding: " . $ex;
@@ -67,11 +85,13 @@ class MailFetcherGmail
 
     private function initGmailConfig()
     {
+        echo "hallo initGmailConfig van mailbox: " . $this->mailbox->id . "<br/>";
+
         $mb = $this->mailbox;
 
         try {
             LaravelGmail::setUserId($mb->id);
-            $gmailController = new GmailController($mb);
+            $gmailController = new GmailHelper($mb);
 
             $mb->valid = $gmailController->checkOauthGmail();
             if($mb->valid){

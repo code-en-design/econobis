@@ -52,16 +52,19 @@ trait Configurable
 	{
 		if (property_exists(get_class($this), 'userId') && $this->userId) {
 			$userId = $this->userId;
-		} elseif (auth()->user()) {
-			$userId = auth()->user()->id;
 		}
+
+        echo "UserId in getFileName: " . (isset($userId) ? $userId : 'onbekend') . "<br/>";
 
 		$credentialFilename = $this->_config['gmail.credentials_file_name'];
 		$allowMultipleCredentials = $this->_config['gmail.allow_multiple_credentials'];
 
 		if (isset($userId) && $allowMultipleCredentials) {
+            echo "FileName: " . sprintf('%s-%s', $credentialFilename, $userId) . "<br/>";
 			return sprintf('%s-%s', $credentialFilename, $userId);
 		}
+
+        echo "FileName: " . $credentialFilename . "<br/>";
 
 		return $credentialFilename;
 	}

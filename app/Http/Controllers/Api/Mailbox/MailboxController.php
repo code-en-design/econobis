@@ -172,6 +172,7 @@ class MailboxController extends Controller
         }
 
         if($mailbox->incoming_server_type === 'gmail'){
+            echo "hallo mailbox: " . $mailbox->id . "<br/>";
             $mailFetcher = new MailFetcherGmail($mailbox);
         }else{
             $mailFetcher = new MailFetcher($mailbox);
