@@ -54,12 +54,12 @@ trait Configurable
 			$userId = $this->userId;
 		}
 
-        echo "UserId in getFileName: " . (isset($userId) ? $userId : 'onbekend') . "<br/>";
+        echo "UserId in getFileName: " . (!empty($userId) ? $userId : 'onbekend') . "<br/>";
 
 		$credentialFilename = $this->_config['gmail.credentials_file_name'];
 		$allowMultipleCredentials = $this->_config['gmail.allow_multiple_credentials'];
 
-		if (isset($userId) && $allowMultipleCredentials) {
+        if (isset($userId) && $allowMultipleCredentials) {
             echo "FileName: " . sprintf('%s-%s', $credentialFilename, $userId) . "<br/>";
 			return sprintf('%s-%s', $credentialFilename, $userId);
 		}

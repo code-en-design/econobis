@@ -37,8 +37,8 @@ Route::get('/oauth/gmail/mailbox/{mailboxId}', function ($mailboxId){
 
     $mailbox = \App\Eco\Mailbox\Mailbox::find($mailboxId);
     LaravelGmail::setUserId($mailboxId);
-    $gmailController = new GmailHelper($mailbox);
-    return $gmailController->oauthGmail();
+    $gmailHelper = new GmailHelper($mailbox);
+    return $gmailHelper->oauthGmail();
 
 });
 
@@ -83,40 +83,46 @@ Route::get('/oauth/gmail/checkuser/{mailboxId}', function ($mailboxId){
 //    echo LaravelGmail::check() ? 'Ingelogd: ' . LaravelGmail::user() : 'Niet ingelogd';
     $mailbox = \App\Eco\Mailbox\Mailbox::find($mailboxId);
     LaravelGmail::setUserId($mailboxId);
-    $gmailController = new GmailHelper($mailbox);
-    echo $gmailController->checkOauthGmail() ? 'Ingelogd: ' . LaravelGmail::user() : 'Niet ingelogd';
+    $gmailHelper = new GmailHelper($mailbox);
+    echo $gmailHelper->checkOauthGmail() ? 'Ingelogd: ' . LaravelGmail::user() : 'Niet ingelogd';
 });
 
-//Route::get('/oauth/gmail/fetch-mails-user/{user}', function ($user){
-//    echo "User (parm): " . $user . "<br />";
-//    $messages = LaravelGmail::message()->from($user)->unread()->preload()->all();
-//    foreach ( $messages as $message ) {
-//        echo "User: " . LaravelGmail::user() . "<br />";
-//        echo "Id: " . $message->getId() . "<br />";
-//        echo "Internal date : " . $message->getInternalDate() . "<br />";
-//        echo "Date: " . $message->getDate() . "<br />";
-//        echo "Subject: " . $message->getSubject() . "<br />";
-//        echo "Bijlage(n): " . ($message->hasAttachments() ? 'Ja' : 'Nee' ) . "<br />";
-//        echo "Tekst:" . "<br />";
-//        echo $message->getHtmlBody();
-//        echo "<br />";
-//    }
-//});
-//
+Route::get('/oauth/gmail/fetch-mails-test', function (){
+    echo "Test mailbox 22-E<br />";
+    LaravelGmail::setUserId(22);
+    $mailbox = \App\Eco\Mailbox\Mailbox::find(22);
+    $mailFetcherGmail = new MailFetcherGmail($mailbox);
+    $mailFetcherGmail->fetchNew();
+    echo "Test mailbox 24-E<br />";
+    LaravelGmail::setUserId(24);
+    $mailbox = \App\Eco\Mailbox\Mailbox::find(24);
+    $mailFetcherGmail = new MailFetcherGmail($mailbox);
+    $mailFetcherGmail->fetchNew();
+});
+
+
 Route::get('/oauth/gmail/fetch-mails-unread', function (){
     try{
-        $messages = LaravelGmail::message()->unread()->preload()->all();
-        foreach ( $messages as $message ) {
-            echo "User: " . LaravelGmail::user() . "<br />";
-            echo "Id: " . $message->getId() . "<br />";
-            echo "Internal date : " . $message->getInternalDate() . "<br />";
-            echo "Date: " . $message->getDate() . "<br />";
-            echo "Subject: " . $message->getSubject() . "<br />";
-            echo "Bijlage(n): " . ($message->hasAttachments() ? 'Ja' : 'Nee' ) . "<br />";
-            echo "Tekst:" . "<br />";
-            echo $message->getHtmlBody();
-            echo "<br />";
-        }
+        echo "Test mailbox 22-D<br />";
+        LaravelGmail::setUserId(22);
+        $messages22 = LaravelGmail::message()->unread()->preload()->all();
+        echo "Aantal mailbox22: " . count( $messages22 ) . "<br/>";
+        echo "Test mailbox 24-D<br />";
+        LaravelGmail::setUserId(24);
+        $messages24 = LaravelGmail::message()->unread()->preload()->all();
+        echo "Aantal mailbox24: " . count( $messages24 ) . "<br/>";
+//        $messages = LaravelGmail::message()->unread()->preload()->all();
+//        foreach ( $messages as $message ) {
+//            echo "User: " . LaravelGmail::user() . "<br />";
+//            echo "Id: " . $message->getId() . "<br />";
+//            echo "Internal date : " . $message->getInternalDate() . "<br />";
+//            echo "Date: " . $message->getDate() . "<br />";
+//            echo "Subject: " . $message->getSubject() . "<br />";
+//            echo "Bijlage(n): " . ($message->hasAttachments() ? 'Ja' : 'Nee' ) . "<br />";
+//            echo "Tekst:" . "<br />";
+//            echo $message->getHtmlBody();
+//            echo "<br />";
+//        }
     } catch (\Exception $exception) {
         echo "fetch unread failed: " . $exception;
     }

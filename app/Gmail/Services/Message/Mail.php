@@ -76,7 +76,6 @@ class Mail extends GmailConnection
 	public function __construct(\Google_Service_Gmail_Message $message = null, $preload = false, $userId = null)
 	{
 		$this->service = new Google_Service_Gmail($this);
-        echo "Construct Mail: " . $userId . "<br/>";
 
 		$this->__rConstruct();
 		$this->__mConstruct();
@@ -498,7 +497,6 @@ class Mail extends GmailConnection
 
 		foreach ($parts as $part) {
 			if (!empty($part->body->attachmentId)) {
-                echo "UserId in getAttachments: " . $this->userId . "<br/>";
                 $attachment = (new Attachment($part->body->attachmentId, $part, $this->userId));
 
 				if ($preload) {

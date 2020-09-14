@@ -51,6 +51,7 @@ class GmailConnection extends Google_Client
 	 */
 	public function checkPreviouslyLoggedIn()
 	{
+        echo "Vanuit GmailConnection checkPreviouslyLoggedIn: <br/>";
 		$fileName = $this->getFileName();
 		$file = "gmail/tokens/$fileName.json";
 		$allowJsonEncrypt = $this->_config['gmail.allow_json_encrypt'];
@@ -146,6 +147,7 @@ class GmailConnection extends Google_Client
 	 */
 	public function saveAccessToken(array $config)
 	{
+        echo "Vanuit GmailConnection saveAccessToken: <br/>";
 		$disk = Storage::disk('local');
 		$fileName = $this->getFileName();
 		$file = "gmail/tokens/$fileName.json";
@@ -240,6 +242,7 @@ class GmailConnection extends Google_Client
 	 */
 	public function deleteAccessToken()
 	{
+        echo "Vanuit GmailConnection deleteAccessToken: <br/>";
 		$disk = Storage::disk('local');
 		$fileName = $this->getFileName();
 		$file = "gmail/tokens/$fileName.json";

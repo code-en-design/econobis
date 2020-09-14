@@ -79,12 +79,10 @@ class Message
         echo "Aantal messages: " . ($allMessages ? count($allMessages) : 'geen') . "<br/>";
 
 		if (!$this->preload) {
-            echo "geen preload<br/>";
 			foreach ($allMessages as $message) {
 				$messages[] = new Mail($message, $this->preload, $this->client->userId);
 			}
 		} else {
-            echo "wel preload<br/>";
 			$messages = $this->batchRequest($allMessages);
 		}
 
@@ -125,7 +123,6 @@ class Message
 	public function get($id)
 	{
 		$message = $this->getRequest($id);
-        echo "UserId in get: " . $this->client->userId . "<br/>";
 
 		return new Mail($message, false, $this->client->userId);
 	}
@@ -139,27 +136,19 @@ class Message
 	 */
 	public function batchRequest($allMessages)
 	{
-        echo "Hallo batchRequest!<br/>";
 		$this->client->setUseBatch(true);
-        echo "a<br/>";
 
 		$batch = $this->service->createBatch();
-        echo "b<br/>";
 
 		foreach ($allMessages as $key => $message) {
-            echo "1";
 			$batch->add($this->getRequest($message->getId()), $key);
 		}
-        echo "c<br/>";
 
 		$messagesBatch = $batch->execute();
-        echo "d<br/>";
 
 		$this->client->setUseBatch(false);
-        echo "e<br/>";
 
 		$messages = [];
-		echo "UserId in batchRequest: " . $this->client->userId . "<br/>";
 		foreach ($messagesBatch as $message) {
 			$messages[] = new Mail($message, false, $this->client->userId);
 		}
@@ -176,7 +165,6 @@ class Message
 	 */
 	public function preload()
 	{
-        echo "UserId in preload: " . $this->client->userId . "<br/>";
 		$this->preload = true;
 
 		return $this;
@@ -208,22 +196,10 @@ class Message
         echo "MessageResponse class " . get_class( $responseOrRequest ) . "<br/>";
 
 		if ( get_class( $responseOrRequest ) === "GuzzleHttp\Psr7\Request" ) {
-            echo "Google service aanroep voor response<br/>";
-            echo "Request:<br/>";
-            print_r($responseOrRequest);
-            echo "<br/>";
 			$response = $this->service->getClient()->execute( $responseOrRequest, 'Google_Service_Gmail_ListMessagesResponse' );
-
-            echo "Response aantal: " . count( $response->getMessages() ) . "<br/>";
 
             return $response;
 		}
-
-        echo "Google service aanroep voor response<br/>";
-        echo "Request:<br/>";
-        print_r($responseOrRequest);
-        echo "<br/>";
-        echo "Response or request aantal: " . count( $responseOrRequest->getMessages() ) . "<br/>";
 
 		return $responseOrRequest;
 	}

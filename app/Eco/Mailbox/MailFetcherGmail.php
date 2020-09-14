@@ -46,6 +46,7 @@ class MailFetcherGmail
             return;
         }
         try {
+//            $emails = LaravelGmail::message()->unread()->all();
             $emails = LaravelGmail::message()->unread()->preload()->all();
         }
         catch(Google_Service_Exception $gse) {
@@ -91,21 +92,23 @@ class MailFetcherGmail
 
         try {
             LaravelGmail::setUserId($mb->id);
-            $gmailController = new GmailHelper($mb);
+            $gmailHelper = new GmailHelper($mb);
+//            echo( "Check oauth mail in fetcher: " . $gmailHelper->checkOauthGmail() . "<br/>" );
+            $gmailHelper = new GmailHelper($mb);
 
-            $mb->valid = $gmailController->checkOauthGmail();
+            $mb->valid = $gmailHelper->checkOauthGmail();
             if($mb->valid){
                 $mb->login_tries = 0;
             }else{
                 $mb->login_tries = $mb->login_tries + 1;
             }
-            $mb->save();
+//            $mb->save();
         }
         catch(\Exception $e){
             Log::error($e->getMessage());
             $mb->valid = false;
             $mb->login_tries = $mb->login_tries + 1;
-            $mb->save();
+//            $mb->save();
         }
         $this->mailbox = $mb;
     }
