@@ -166,10 +166,6 @@ class MailboxNewForm extends Component {
                     errors.password = true;
                     hasErrors = true;
                 }
-                if (validator.isEmpty(mailbox.imapHost)) {
-                    errors.imapHost = true;
-                    hasErrors = true;
-                }
             }
 
         } else {
@@ -185,7 +181,6 @@ class MailboxNewForm extends Component {
                 errors.imapHost = true;
                 hasErrors = true;
             }
-
             if (validator.isEmpty(mailbox.imapPort)) {
                 errors.imapPort = true;
                 hasErrors = true;
@@ -323,13 +318,14 @@ class MailboxNewForm extends Component {
                                 value={usesGmailIncoming}
                                 onChangeAction={this.handleInputUsesGmailIncoming}
                             />
-                            <InputToggle
-                                label="Uitgaand gebruikt Gmail"
-                                name={'usesGmailOutgoing'}
-                                value={usesGmailOutgoing}
-                                disabled={!usesGmailIncoming}
-                                onChangeAction={this.handleInputUsesGmailOutgoing}
-                            />
+                            {/*<InputToggle*/}
+                                {/*label="Uitgaand gebruikt Gmail"*/}
+                                {/*name={'usesGmailOutgoing'}*/}
+                                {/*value={usesGmailOutgoing}*/}
+                                {/*disabled={!usesGmailIncoming}*/}
+                                {/*onChangeAction={this.handleInputUsesGmailOutgoing}*/}
+                            {/*/>*/}
+                            <div className="form-group col-md-6" />
                         </div>
                         {usesGmailIncoming ? (
                             <React.Fragment>

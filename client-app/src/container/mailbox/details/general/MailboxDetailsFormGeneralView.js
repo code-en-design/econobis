@@ -72,10 +72,11 @@ const MailboxDetailsFormGeneralView = props => {
                             label="Inkomend gebruikt Gmail"
                             value={usesGmailIncoming ? 'Ja' : 'Nee'}
                         />
-                        <ViewText
-                            label="Uitgaand gebruikt Gmail"
-                            value={usesGmailOutgoing ? 'Ja' : 'Nee'}
-                        />
+                        {/*<ViewText*/}
+                            {/*label="Uitgaand gebruikt Gmail"*/}
+                            {/*value={usesGmailOutgoing ? 'Ja' : 'Nee'}*/}
+                        {/*/>*/}
+                        <div className="col-md-6" />
                     </div>
                     {usesGmailIncoming ? (
                         <React.Fragment>
