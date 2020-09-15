@@ -33,7 +33,8 @@ class GmailHelper
 
     public function oauthGmail()
     {
-        $gmail = new EconobisLaravelGmailClass($this->config, $this->mailbox->id);
+//        $gmail = new EconobisLaravelGmailClass($this->config, $this->mailbox->id);
+        $gmail = new LaravelGmailClass($this->config, $this->mailbox->id);
         return $gmail->redirect();
     }
 
