@@ -102,13 +102,13 @@ class MailFetcherGmail
             }else{
                 $mb->login_tries = $mb->login_tries + 1;
             }
-//            $mb->save();
+            $mb->save();
         }
         catch(\Exception $e){
             Log::error($e->getMessage());
             $mb->valid = false;
             $mb->login_tries = $mb->login_tries + 1;
-//            $mb->save();
+            $mb->save();
         }
         $this->mailbox = $mb;
     }
