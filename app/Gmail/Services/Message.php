@@ -36,8 +36,6 @@ class Message
 	 */
 	public function __construct(LaravelGmailClass $client)
 	{
-        echo "Construct Message: " . $client->userId . "<br/>";
-
 		$this->client = $client;
 		$this->service = new Google_Service_Gmail($client);
 	}
@@ -193,12 +191,10 @@ class Message
 	{
 		$responseOrRequest = $this->service->users_messages->listUsersMessages( 'me', $this->params );
 
-        echo "MessageResponse class " . get_class( $responseOrRequest ) . "<br/>";
-
 		if ( get_class( $responseOrRequest ) === "GuzzleHttp\Psr7\Request" ) {
 			$response = $this->service->getClient()->execute( $responseOrRequest, 'Google_Service_Gmail_ListMessagesResponse' );
 
-            return $response;
+			return $response;
 		}
 
 		return $responseOrRequest;

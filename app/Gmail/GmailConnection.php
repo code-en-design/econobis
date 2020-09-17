@@ -242,7 +242,6 @@ class GmailConnection extends Google_Client
 	 */
 	public function deleteAccessToken()
 	{
-        echo "Vanuit GmailConnection deleteAccessToken: <br/>";
 		$disk = Storage::disk('local');
 		$fileName = $this->getFileName();
 		$file = "gmail/tokens/$fileName.json";

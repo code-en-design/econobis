@@ -10,11 +10,6 @@ class LaravelGmailClass extends GmailConnection
 {
 	public function __construct($config, $userId = null)
 	{
-        $this->userId = $userId;
-
-        echo "Construct in LaravelGmailClass 1: " . $userId . "<br/>";
-        echo "Construct in LaravelGmailClass 2: " . $this->userId . "<br/>";
-
 //		if (class_basename($config) === 'Application') {
 //			$config = $config['config'];
 //		}
@@ -28,8 +23,6 @@ class LaravelGmailClass extends GmailConnection
 	 */
 	public function message()
 	{
-	    echo "Hallo message in LaravelGmailClass<br/>";
-
 		if (!$this->getToken()) {
 			throw new AuthException('No credentials found.');
 		}

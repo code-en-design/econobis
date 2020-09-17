@@ -40,15 +40,19 @@ class GmailHelper
 
     public function checkOauthGmail()
     {
-        echo "Check gmail email<br/>";
+        echo "Check gmail email 3<br/>";
+        LaravelGmail::setUserId($this->mailbox->id);
 //        $gmail = new EconobisLaravelGmailClass($this->config, $this->mailbox->id);
         $gmail = new LaravelGmailClass($this->config, $this->mailbox->id);
+        echo "Gmail email: " . $gmail->getProfile()->emailAddress . "<br/>";
+
         // Indien emailadres van mailbox niet overeenkomt met emailadres bij gekoppeld gmail account, dan niet ok.
-        if($this->mailbox->email != $gmail->getProfile()->emailAddress){
+        if($this->mailbox->email != LaravelGmail::user()){
+            echo "Mismatch mailbox email: " . $this->mailbox->email . " met laravelgmail email: " . LaravelGmail::user() . "<br/>";
             return false;
         }
+        echo "Match mailbox email: " . $this->mailbox->email . " met laravelgmail email: " . LaravelGmail::user() . "<br/>";
 
-        echo ($gmail->check() ? 'Ingelogd: ' . LaravelGmail::user() : 'Niet ingelogd') . "<br/>";
         return $gmail->check();
     }
 

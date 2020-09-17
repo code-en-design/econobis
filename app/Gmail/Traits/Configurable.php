@@ -52,6 +52,9 @@ trait Configurable
 	{
 		if (property_exists(get_class($this), 'userId') && $this->userId) {
 			$userId = $this->userId;
+		} elseif (auth()->user()) {
+            echo "use auth()->user ?????????<br/>";
+			$userId = auth()->user()->id;
 		}
 
         echo "UserId in getFileName: " . (!empty($userId) ? $userId : 'onbekend') . "<br/>";
@@ -78,7 +81,7 @@ trait Configurable
 			'client_secret' => $this->_config['gmail.client_secret'],
 			'client_id' => $this->_config['gmail.client_id'],
 			'redirect_uri' => url($this->_config['gmail.redirect_url']),
-			'state' => isset($this->_config['state']) ? $this->_config['state'] : null,
+			'state' => isset($this->_config['gmail.state']) ? $this->_config['gmail.state'] : null,
 		];
 	}
 

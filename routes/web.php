@@ -82,7 +82,7 @@ Route::get('/oauth/gmail/logout/{mailboxId}', function ($mailboxId){
 Route::get('/oauth/gmail/checkuser/{mailboxId}', function ($mailboxId){
 //    echo LaravelGmail::check() ? 'Ingelogd: ' . LaravelGmail::user() : 'Niet ingelogd';
     $mailbox = \App\Eco\Mailbox\Mailbox::find($mailboxId);
-    LaravelGmail::setUserId($mailboxId);
+//    LaravelGmail::setUserId($mailboxId);
     $gmailHelper = new GmailHelper($mailbox);
     echo $gmailHelper->checkOauthGmail() ? 'Ingelogd: ' . LaravelGmail::user() : 'Niet ingelogd';
 });

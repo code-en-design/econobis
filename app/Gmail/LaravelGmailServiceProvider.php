@@ -2,7 +2,6 @@
 
 namespace App\Gmail;
 
-use App\Gmail\LaravelGmailClass;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 
