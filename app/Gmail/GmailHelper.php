@@ -44,7 +44,10 @@ class GmailHelper
         LaravelGmail::setUserId($this->mailbox->id);
 //        $gmail = new EconobisLaravelGmailClass($this->config, $this->mailbox->id);
         $gmail = new LaravelGmailClass($this->config, $this->mailbox->id);
-        echo "Gmail email: " . $gmail->getProfile()->emailAddress . "<br/>";
+        echo 'Mailbox: ' . $this->mailbox->id . '<br/>';
+        echo 'Mailbox email: ' . $this->mailbox->email . '<br/>';
+        echo 'LaravelGmail: ' . LaravelGmail::user() . '<br/>';
+        echo 'Profile: ' . $gmail->getProfile()->emailAddress . '<br/>';
 
         // Indien emailadres van mailbox niet overeenkomt met emailadres bij gekoppeld gmail account, dan niet ok.
         if($this->mailbox->email != LaravelGmail::user()){
