@@ -78,11 +78,11 @@ Route::get('/oauth/gmail/callback', function (){
 //    return redirect()->to('/oauth/gmail/checkuser/'.$mailboxId);
 //});
 
-//Route::get('/oauth/gmail/checkuser/{mailboxId}', function ($mailboxId){
-//    $mailbox = \App\Eco\Mailbox\Mailbox::find($mailboxId);
-//    $gmailHelper = new GmailHelper($mailbox);
-//    echo $gmailHelper->checkOauthGmail() ? 'Ingelogd: ' . LaravelGmail::user() : 'Niet ingelogd';
-//});
+Route::get('/oauth/gmail/checkuser/{mailboxId}', function ($mailboxId){
+    $mailbox = \App\Eco\Mailbox\Mailbox::find($mailboxId);
+    $gmailHelper = new GmailHelper($mailbox);
+    echo $gmailHelper->checkOauthGmail() ? 'Ingelogd: ' . LaravelGmail::user() : 'Niet ingelogd';
+});
 
 //Route::get('/oauth/gmail/callback', function (){
 //    if(empty(session('gmailMailboxId'))){
