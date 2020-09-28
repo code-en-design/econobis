@@ -54,8 +54,9 @@ Route::get('/oauth/gmail/fetch-mails-unread', function (){
 
 Route::get('/oauth/gmail/callback', function (){
 //    LaravelGmail::makeToken();
-    if(!empty(session('gmailMailboxId'))){
+    if(!empty(session(['gmailMailboxId']))){
         $mailboxId = session(['gmailMailboxId']);
+        echo "Callback voor mailboxId: " . $mailboxId;
         $mailbox = \App\Eco\Mailbox\Mailbox::find($mailboxId);
         $gmailHelper = new GmailHelper($mailbox);
         $gmailHelper->makeToken();
