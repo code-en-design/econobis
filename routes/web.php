@@ -53,7 +53,13 @@ Route::get('/oauth/gmail/fetch-mails-unread', function (){
 });
 
 Route::get('/oauth/gmail/callback', function (){
-    LaravelGmail::makeToken();
+//    LaravelGmail::makeToken();
+    if(!empty(session('gmailMailboxId'))){
+        $mailboxId = session(['gmailMailboxId']);
+        $mailbox = \App\Eco\Mailbox\Mailbox::find($mailboxId);
+        $gmailHelper = new GmailHelper($mailbox);
+        $gmailHelper->makeToken();
+    }
 
     //todo hier wellicht opslaan token in mailbox?
     return redirect()->to('/oauth/gmail/checkuser');

@@ -67,5 +67,12 @@ class GmailHelper
         return $gmail->logout();
     }
 
+    public function makeToken()
+    {
+        $gmail = new LaravelGmailClass($this->config, $this->mailbox->id);
+        $gmail->setUserId($this->mailbox->id);
+        return $gmail->makeToken();
+    }
+
 
 }
