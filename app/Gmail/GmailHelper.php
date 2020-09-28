@@ -33,29 +33,38 @@ class GmailHelper
 
     public function oauthGmail()
     {
-        LaravelGmail::setUserId($this->mailbox->id);
+//        LaravelGmail::setUserId($this->mailbox->id);
         $gmail = new LaravelGmailClass($this->config, $this->mailbox->id);
+        $gmail->setUserId($this->mailbox->id);
         return $gmail->redirect();
     }
 
     public function checkOauthGmail()
     {
         echo "Check oauth gmail<br/>";
-        LaravelGmail::setUserId($this->mailbox->id);
+//        LaravelGmail::setUserId($this->mailbox->id);
         $gmail = new LaravelGmailClass($this->config, $this->mailbox->id);
+        $gmail->setUserId($this->mailbox->id);
         echo 'Mailbox: ' . $this->mailbox->id . '<br/>';
         echo 'Mailbox email: ' . $this->mailbox->email . '<br/>';
-        echo 'LaravelGmail: ' . LaravelGmail::user() . '<br/>';
-        echo 'Profile: ' . $gmail->getProfile()->emailAddress . '<br/>';
+        echo 'LaravelGmail email: ' . $gmail->user() . '<br/>';
 
         // Indien emailadres van mailbox niet overeenkomt met emailadres bij gekoppeld gmail account, dan niet ok.
-        if($this->mailbox->email != LaravelGmail::user()){
-            echo "Mismatch mailbox email: " . $this->mailbox->email . " met laravelgmail email: " . LaravelGmail::user() . "<br/>";
+        if($this->mailbox->email != $gmail->user()){
+            echo "Mismatch mailbox email: " . $this->mailbox->email . " met laravelgmail email: " . $gmail->user() . "<br/>";
             return false;
         }
-        echo "Match mailbox email: " . $this->mailbox->email . " met laravelgmail email: " . LaravelGmail::user() . "<br/>";
+        echo "Match mailbox email: " . $this->mailbox->email . " met laravelgmail email: " . $gmail->user() . "<br/>";
 
         return $gmail->check();
+    }
+
+    public function logout()
+    {
+//        LaravelGmail::setUserId($this->mailbox->id);
+        $gmail = new LaravelGmailClass($this->config, $this->mailbox->id);
+        $gmail->setUserId($this->mailbox->id);
+        return $gmail->logout();
     }
 
 

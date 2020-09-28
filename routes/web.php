@@ -61,22 +61,22 @@ Route::get('/oauth/gmail/callback', function (){
 
 // Hieronder de testen per mailbox
 
-//Route::get('/oauth/gmail/mailbox/{mailboxId}', function ($mailboxId){
-//    if(empty(session('gmailMailboxId'))){
-//        session(['gmailMailboxId' => $mailboxId]);
-//    }
-//
-//    $mailbox = \App\Eco\Mailbox\Mailbox::find($mailboxId);
-//    LaravelGmail::setUserId($mailboxId);
-//    $gmailHelper = new GmailHelper($mailbox);
-//    return $gmailHelper->oauthGmail();
-//});
+Route::get('/oauth/gmail/mailbox/{mailboxId}', function ($mailboxId){
+    if(empty(session('gmailMailboxId'))){
+        session(['gmailMailboxId' => $mailboxId]);
+    }
 
-//Route::get('/oauth/gmail/logout/{mailboxId}', function ($mailboxId){
-//    LaravelGmail::setUserId($mailboxId);
-//    LaravelGmail::logout(); //It returns exception if fails
-//    return redirect()->to('/oauth/gmail/checkuser/'.$mailboxId);
-//});
+    $mailbox = \App\Eco\Mailbox\Mailbox::find($mailboxId);
+    $gmailHelper = new GmailHelper($mailbox);
+    return $gmailHelper->oauthGmail();
+});
+
+Route::get('/oauth/gmail/logout/{mailboxId}', function ($mailboxId){
+    $mailbox = \App\Eco\Mailbox\Mailbox::find($mailboxId);
+    $gmailHelper = new GmailHelper($mailbox);
+    $gmailHelper->logout();
+    return redirect()->to('/oauth/gmail/checkuser/'.$mailboxId);
+});
 
 Route::get('/oauth/gmail/checkuser/{mailboxId}', function ($mailboxId){
     $mailbox = \App\Eco\Mailbox\Mailbox::find($mailboxId);

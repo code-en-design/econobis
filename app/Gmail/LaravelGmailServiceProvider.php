@@ -20,7 +20,9 @@ class LaravelGmailServiceProvider extends ServiceProvider
 
 		// Main Service
 		$this->app->bind('laravelgmail', function ($app) {
-			return new LaravelGmailClass($app['config']);
+            echo "XXXXXXXXXXXXX register vanuit provider <br/>";
+
+            return new LaravelGmailClass($app['config']);
 		});
 
 	}
