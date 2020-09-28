@@ -53,20 +53,33 @@ Route::get('/oauth/gmail/fetch-mails-unread', function (){
 });
 
 Route::get('/oauth/gmail/callback', function (){
-//    LaravelGmail::makeToken();
-    if(!empty(session(['gmailMailboxId']))){
-        $mailboxId = session(['gmailMailboxId']);
-        echo "Callback voor mailboxId: " . $mailboxId;
-        $mailbox = \App\Eco\Mailbox\Mailbox::find($mailboxId);
-        $gmailHelper = new GmailHelper($mailbox);
-        $gmailHelper->makeToken();
-    }
+    LaravelGmail::makeToken();
 
     //todo hier wellicht opslaan token in mailbox?
     return redirect()->to('/oauth/gmail/checkuser');
 });
 
 // Hieronder de testen per mailbox
+
+//Route::get('/oauth/gmail/callback', function (){
+////    LaravelGmail::makeToken();
+//    echo "Test Callback <br />";
+//    if(empty(session('gmailMailboxId'))){
+//        echo "Geen geldige gmail mailbox gevonden na callback<br />";
+//        return;
+//    }
+//    else{
+//        $mailboxId = session('gmailMailboxId');
+//        echo "Callback voor mailboxId: " . $mailboxId . "<br />";
+//        $mailbox = \App\Eco\Mailbox\Mailbox::find($mailboxId);
+//        $gmailHelper = new GmailHelper($mailbox);
+//        $gmailHelper->makeToken();
+//        session()->forget(['gmailMailboxId']);
+//    }
+//
+//    //todo hier wellicht opslaan token in mailbox?
+//    return redirect()->to('/oauth/gmail/checkuser/'.$mailboxId);
+//});
 
 Route::get('/oauth/gmail/mailbox/{mailboxId}', function ($mailboxId){
     if(empty(session('gmailMailboxId'))){
@@ -90,22 +103,6 @@ Route::get('/oauth/gmail/checkuser/{mailboxId}', function ($mailboxId){
     $gmailHelper = new GmailHelper($mailbox);
     echo $gmailHelper->checkOauthGmail() ? 'Ingelogd: ' . LaravelGmail::user() : 'Niet ingelogd';
 });
-
-//Route::get('/oauth/gmail/callback', function (){
-//    if(empty(session('gmailMailboxId'))){
-//        echo "Geen geldige gmail mailbox gevonden na callback";
-//        return;
-//    }
-//
-//    $mailboxId = session('gmailMailboxId');
-//    session()->forget(['gmailMailboxId']);
-//
-//    LaravelGmail::setUserId($mailboxId);
-//    LaravelGmail::makeToken();
-//
-//    //todo hier wellicht opslaan token in mailbox?
-//    return redirect()->to('/oauth/gmail/checkuser/'.$mailboxId);
-//});
 
 // Hieronder overige losje testjes
 
