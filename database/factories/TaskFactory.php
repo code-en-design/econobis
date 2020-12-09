@@ -14,9 +14,9 @@ $factory->define(App\Eco\Task\Task::class, function (Faker\Generator $faker) {
         'intake_id' => function () use ($faker) {
             if ($faker->boolean(50)) return \App\Eco\Intake\Intake::inRandomOrder()->first()->id;
         },
-        'opportunity_id' => function () use ($faker) {
-            if ($faker->boolean(50)) return \App\Eco\Opportunity\Opportunity::inRandomOrder()->first()->id;
-        },
+        // 'opportunity_id' => function () use ($faker) {
+        //     if ($faker->boolean(50)) return \App\Eco\Opportunity\Opportunity::inRandomOrder()->first()->id;
+        // },
         'contact_group_id' => function () use ($faker) {
             if ($faker->boolean(50)) return \App\Eco\ContactGroup\ContactGroup::inRandomOrder()->first()->id;
         },
