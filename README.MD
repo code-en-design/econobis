@@ -48,11 +48,11 @@ Command prompt in eco/econobis
 Eigen .env aanmaken:
 `cp .env.example .env`
 
-Key zetten in deze .env
-`php artisan key:generate`
-
 Installeer packages:
 `composer install`
+
+Key zetten in deze .env
+`php artisan key:generate`
 
 Migreer database met seed:
 `php artisan migrate --seed`
