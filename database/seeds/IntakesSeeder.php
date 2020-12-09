@@ -34,16 +34,16 @@ class IntakesSeeder extends Seeder
 
 
                     // Als er een intake is kunnen er ook measuresRequested aan het adres zijn gekoppeld
-                    \App\Eco\Measure\Measure::inRandomOrder()
-                        ->limit(random_int(0, 3))
-                        ->get()
-                        ->each(function ($measure) use ($address, $faker) {
-                            factory(\App\Eco\Measure\MeasureRequested::class, 1)->create([
-                                    'address_id' => $address->id,
-                                    'measure_id' => $measure->id,
-                                ]
-                            );
-                        });
+                    // \App\Eco\Measure\Measure::inRandomOrder()
+                    //     ->limit(random_int(0, 3))
+                    //     ->get()
+                    //     ->each(function ($measure) use ($address, $faker) {
+                    //         factory(\App\Eco\Measure\MeasureRequested::class, 1)->create([
+                    //                 'address_id' => $address->id,
+                    //                 'measure_id' => $measure->id,
+                    //             ]
+                    //         );
+                    //     });
 
                 });
         }
