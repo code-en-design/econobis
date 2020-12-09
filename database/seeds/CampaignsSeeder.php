@@ -19,11 +19,11 @@ class CampaignsSeeder extends Seeder
                         'campaign_id' => $campaign->id,
                     ]);
 
-                $campaign->measures()->sync(
-                    \App\Eco\Measure\Measure::inRandomOrder()
-                        ->limit(random_int(0, 3))
-                        ->get()
-                );
+                // $campaign->measures()->sync(
+                //     \App\Eco\Measure\Measure::inRandomOrder()
+                //         ->limit(random_int(0, 3))
+                //         ->get()
+                // );
 
                 $campaign->organisations()->sync(
                     \App\Eco\Organisation\Organisation::inRandomOrder()
